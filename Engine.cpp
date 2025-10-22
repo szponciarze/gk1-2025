@@ -2,11 +2,20 @@
 #include<iostream>
 #include<SDL.h>
 
+
 //Inicjalizacja biblioteki graficznej
 bool Engine::init(const std::string& windowtitle, int x, int y, int width, int height, bool Fullscreen, bool mouseOn, bool keyboardOn, int targetFPS) {
 
+	//zapisywanie bledow do pliku
+	logFile.open("logFile.txt", std::ios::out | std::ios::app);
+	if (!logFile) {
+		std::cerr << "Nie mozna otworzyc pliku do zapisu bledow." << std::endl;
+		return false;
+	}
+	
+	
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_EVENTS) != 0) {
-		std::cerr << "SDL Init error:" << SDL_GetError() << std::endl;
+		logError("SDL Init error:" + std::string(SDL_GetError()));
 		return false;
 	}
 
@@ -22,7 +31,7 @@ bool Engine::init(const std::string& windowtitle, int x, int y, int width, int h
 	window = SDL_CreateWindow(windowtitle.c_str(), x, y, width, height, flags);
 
 	if (!window) {
-		std::cerr << "SDL Window error:" << SDL_GetError() << std::endl;
+		logError("SDL Window error:" + std::string(SDL_GetError()));
 		return false;
 	}
 
@@ -31,8 +40,10 @@ bool Engine::init(const std::string& windowtitle, int x, int y, int width, int h
 
 	SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0xFF, 0xFF, 0xFF));
 
-	SDL_UpdateWindowSurface(window);
 
+	clearScreen(255, 255, 255);
+
+	SDL_UpdateWindowSurface(window);
 
 	isRunning = true;
 	return true;
@@ -60,14 +71,12 @@ void Engine::mainLoop() {
 			if (mouseOn && e.type == SDL_MOUSEBUTTONDOWN) {
 				std::cout << "Nacisnieto klawisz myszy w: (" << e.button.x << "," << e.button.y << ")" << std::endl;
 			}
-
-
-
-
 		}
 
 
-		
+		//czyszczenie ekranu co klatke
+		clearScreen(80, 80, 120);
+		SDL_UpdateWindowSurface(window);
 
 		
 		frameTime = SDL_GetTicks() - frameStart;
@@ -75,14 +84,48 @@ void Engine::mainLoop() {
 			SDL_Delay(frameDelay - frameTime);
 	}
 
-	//clean();
-	//deinicjalizacja czyszczenie 
-	// - do zaimplementowania
+	clean();
+	
+}
+
+//czyszczenie ekranu
+void Engine::clearScreen(Uint8 r, Uint8 g, Uint8 b) {
+	if (!screenSurface) return;
+
+	SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, r, g, b));
 }
 
 
+//zapisywanie bledow do pliku
+void Engine::logError(const std::string& message) {
+	if (logFile.is_open()) {
+		
+		logFile << message << std::endl;
+	
+	}
+
+	std::cerr << message << std::endl;
+
+}
+
+
+
+//zamkniecie gry
 void Engine::clean() {
-//do zaimplementowania
+	if (screenSurface)
+		screenSurface = nullptr;
+
+	if (window)
+		SDL_DestroyWindow(window);
+
+	SDL_Quit();
+
+	if (logFile.is_open()) {
+		logFile << "Silnik poprawnie zamknieto. \n" << std::endl;
+		logFile.close();
+	}
+
+	std::cout << "Silnik zamkniety, zasoby zwolnione" << std::endl;
 }
 
 

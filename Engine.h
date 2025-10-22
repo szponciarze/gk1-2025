@@ -1,6 +1,9 @@
 #pragma once
 #include<iostream>
 #include<SDL.h>
+#include<fstream>
+
+
 
 class Engine {
 private:
@@ -17,6 +20,8 @@ private:
 	Uint32 frameStart;
 	Uint32 frameTime;
 
+	
+	std::ofstream logFile;
 
 public:
 	//Inicjalizacja biblioteki graficznej
@@ -24,6 +29,13 @@ public:
 
 	//Glowna petla gry
 	void mainLoop();
+
+	//Czyszczenie ekranu do zadanego koloru
+	void clearScreen(Uint8 r, Uint8 g, Uint8 b);
+
+	//Logowanie komunikatow do pliku
+	void logError(const std::string& message);
+	
 
 	//Deinicjalizacja biblioteki graficznej
 	void clean();
