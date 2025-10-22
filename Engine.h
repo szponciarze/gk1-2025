@@ -9,10 +9,12 @@ private:
 
 
 public:
-
+	//Inicjalizacja biblioteki graficznej
 	bool init(const std::string& windowtitle, int x, int y, int width, int height, bool Fullscreen);
+	//Deinicjalizacja biblioteki graficznej
 	void clean();
-	void run();
+	//Glowna petla gry
+	void mainLoop();
 
 
 	bool Fullscreen;
