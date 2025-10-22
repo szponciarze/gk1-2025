@@ -2,7 +2,7 @@
 #include<iostream>
 #include<SDL.h>
 
-
+//Inicjalizacja biblioteki graficznej
 bool Engine::init(const std::string& windowtitle, int x, int y, int width, int height, bool Fullscreen) {
 
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_EVENTS) != 0) {
