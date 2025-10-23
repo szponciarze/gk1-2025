@@ -19,13 +19,12 @@ private:
 	Uint32 frameDelay;
 	Uint32 frameStart;
 	Uint32 frameTime;
-
 	
 	std::ofstream logFile;
 
 public:
 	//Inicjalizacja biblioteki graficznej
-	bool init(const std::string& windowtitle, int x, int y, int width, int height, bool Fullscreen, bool mouseOn, bool keyboardOn, int targetFPS);
+	bool init(const std::string& windowtitle, int x, int y, int width, int height, bool Fullscreen, bool mouseOn, bool keyboardOn, int targetFPS,bool useDoubleBuffer);
 
 	//Glowna petla gry
 	void mainLoop();
@@ -39,11 +38,5 @@ public:
 
 	//Deinicjalizacja biblioteki graficznej
 	void clean();
-
-
-
-
-
-
-
 };
+

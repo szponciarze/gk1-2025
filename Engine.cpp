@@ -1,10 +1,15 @@
 #include "Engine.h"
+#include "PrimitiveRenderer.h"
+#include "Point2D.h"
+#include "LineSegment.h"
 #include<iostream>
 #include<SDL.h>
 
 
 //Inicjalizacja biblioteki graficznej
-bool Engine::init(const std::string& windowtitle, int x, int y, int width, int height, bool Fullscreen, bool mouseOn, bool keyboardOn, int targetFPS) {
+bool Engine::init(const std::string& windowtitle, int x, int y, int width, int height, bool Fullscreen, bool mouseOn, bool keyboardOn, int targetFPS,bool useDoubleBuffer) {
+
+	useDoubleBuffer ? SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1) : SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 0);
 
 	//zapisywanie bledow do pliku
 	logFile.open("logFile.txt", std::ios::out | std::ios::app);
@@ -35,7 +40,6 @@ bool Engine::init(const std::string& windowtitle, int x, int y, int width, int h
 		return false;
 	}
 
-
 	screenSurface = SDL_GetWindowSurface(window);
 
 	SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0xFF, 0xFF, 0xFF));
@@ -49,8 +53,13 @@ bool Engine::init(const std::string& windowtitle, int x, int y, int width, int h
 	return true;
 }
 
+
 //Glowna petla gry
 void Engine::mainLoop() {
+	PrimitiveRenderer renderer(screenSurface);
+	Point2D point1(100, 150);
+	Point2D point2(400, 500);
+	LineSegment line(point1, point2);
 	SDL_Event e;
 
 	while (isRunning) {
@@ -76,8 +85,9 @@ void Engine::mainLoop() {
 
 		//czyszczenie ekranu co klatke
 		clearScreen(80, 80, 120);
+		line.draw(renderer, 255, 0, 0);
 		SDL_UpdateWindowSurface(window);
-
+	
 		
 		frameTime = SDL_GetTicks() - frameStart;
 		if (frameDelay > frameTime)	//Czasomierz
