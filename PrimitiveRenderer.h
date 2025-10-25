@@ -6,11 +6,11 @@
 class PrimitiveRenderer {
 
 private:
-	SDL_Surface* surface;
+	SDL_Renderer* renderer;
 
 public:
-	PrimitiveRenderer(SDL_Surface* surface) :surface(surface) {}
+	PrimitiveRenderer(SDL_Renderer* renderer) :renderer(renderer) {}
 	void putPixel(int x, int y, Uint8 r, Uint8 g, Uint8 b);
-	void incrementalAlgorithm(int x1, int y1, int x2, int y2, Uint8 r, Uint8 b, Uint8 g);
+	void incrementalAlgorithm(int x1, int y1, int x2, int y2, Uint8 r, Uint8 g, Uint8 b);
 
 };

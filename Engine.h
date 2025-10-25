@@ -2,13 +2,17 @@
 #include<iostream>
 #include<SDL.h>
 #include<fstream>
+#include<vector>
 
 
 
 class Engine {
 private:
 	SDL_Window* window;
-	SDL_Surface* screenSurface;
+	SDL_Renderer* render;
+	std::vector<SDL_Texture*> buffers; // wektor tekstur pelniacych role buforow
+	int currentBuffer = 0;
+	int bufferCount = 2; // domyslnie podwojne buforowanie
 	bool Fullscreen;
 	bool isRunning;
 	int width;
@@ -19,13 +23,13 @@ private:
 	Uint32 frameDelay;
 	Uint32 frameStart;
 	Uint32 frameTime;
-	
+
 	std::ofstream logFile;
 
 public:
 	//Inicjalizacja biblioteki graficznej
-	bool init(const std::string& windowtitle, int x, int y, int width, int height, bool Fullscreen, bool mouseOn, bool keyboardOn, int targetFPS,bool useDoubleBuffer);
-
+	bool init(const std::string& windowtitle, int x, int y, int width, int height, bool Fullscreen, bool mouseOn, bool keyboardOn, int targetFPS, int bufferCount);
+	
 	//Glowna petla gry
 	void mainLoop();
 
@@ -34,9 +38,12 @@ public:
 
 	//Logowanie komunikatow do pliku
 	void logError(const std::string& message);
-	
+
 
 	//Deinicjalizacja biblioteki graficznej
 	void clean();
+
+	//rysowanie jednej klatki
+	void renderFrame();
 };
 

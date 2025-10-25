@@ -4,12 +4,12 @@
 #include "LineSegment.h"
 #include<iostream>
 #include<SDL.h>
+#include<string>
 
 
 //Inicjalizacja biblioteki graficznej
-bool Engine::init(const std::string& windowtitle, int x, int y, int width, int height, bool Fullscreen, bool mouseOn, bool keyboardOn, int targetFPS,bool useDoubleBuffer) {
+bool Engine::init(const std::string& windowtitle, int x, int y, int width, int height, bool Fullscreen, bool mouseOn, bool keyboardOn, int targetFPS, int bufferCount) {
 
-	useDoubleBuffer ? SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1) : SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 0);
 
 	//zapisywanie bledow do pliku
 	logFile.open("logFile.txt", std::ios::out | std::ios::app);
@@ -17,8 +17,8 @@ bool Engine::init(const std::string& windowtitle, int x, int y, int width, int h
 		std::cerr << "Nie mozna otworzyc pliku do zapisu bledow." << std::endl;
 		return false;
 	}
-	
-	
+
+
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_EVENTS) != 0) {
 		logError("SDL Init error:" + std::string(SDL_GetError()));
 		return false;
@@ -31,6 +31,8 @@ bool Engine::init(const std::string& windowtitle, int x, int y, int width, int h
 	this->keyboardOn = keyboardOn;
 	this->targetFPS = targetFPS;
 	this->frameDelay = 1000 / targetFPS;
+	this->bufferCount = (bufferCount < 1) ? 1 : bufferCount; 
+	this->currentBuffer = 0;
 
 	Uint32 flags = Fullscreen ? SDL_WINDOW_FULLSCREEN : SDL_WINDOW_SHOWN;
 	window = SDL_CreateWindow(windowtitle.c_str(), x, y, width, height, flags);
@@ -40,14 +42,24 @@ bool Engine::init(const std::string& windowtitle, int x, int y, int width, int h
 		return false;
 	}
 
-	screenSurface = SDL_GetWindowSurface(window);
+	//tworzenie rendereru
+	render = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+	if (!render) {
+		logError("SDL Renderer error: " + std::string(SDL_GetError()));
+		return false;
+	}
 
-	SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0xFF, 0xFF, 0xFF));
 
+	// tworzymy bufory (tekstury docelowe)
+	for (int i = 0; i < this->bufferCount; ++i) {
+		SDL_Texture* buffer = SDL_CreateTexture(render, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, width, height);
+		if (!buffer) {
+			logError("Buffer number: " + std::to_string(i) + " error: " + SDL_GetError());
+			return false;
+		}
+		buffers.push_back(buffer);
+	}
 
-	clearScreen(255, 255, 255);
-
-	SDL_UpdateWindowSurface(window);
 
 	isRunning = true;
 	return true;
@@ -56,17 +68,10 @@ bool Engine::init(const std::string& windowtitle, int x, int y, int width, int h
 
 //Glowna petla gry
 void Engine::mainLoop() {
-	PrimitiveRenderer renderer(screenSurface);
-	Point2D point1(100, 150);
-	Point2D point2(400, 500);
-	LineSegment line(point1, point2);
 	SDL_Event e;
 
 	while (isRunning) {
 		frameStart = SDL_GetTicks();
-
-
-
 
 		while (SDL_PollEvent(&e)) {	//Obsluga zdarzen
 			if (e.type == SDL_QUIT)
@@ -82,48 +87,68 @@ void Engine::mainLoop() {
 			}
 		}
 
+		renderFrame();
 
-		//czyszczenie ekranu co klatke
-		clearScreen(80, 80, 120);
-		line.draw(renderer, 255, 0, 0);
-		SDL_UpdateWindowSurface(window);
-	
-		
 		frameTime = SDL_GetTicks() - frameStart;
 		if (frameDelay > frameTime)	//Czasomierz
 			SDL_Delay(frameDelay - frameTime);
 	}
 
 	clean();
-	
+
 }
-
-//czyszczenie ekranu
-void Engine::clearScreen(Uint8 r, Uint8 g, Uint8 b) {
-	if (!screenSurface) return;
-
-	SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, r, g, b));
-}
-
 
 //zapisywanie bledow do pliku
 void Engine::logError(const std::string& message) {
 	if (logFile.is_open()) {
-		
+
 		logFile << message << std::endl;
-	
+
 	}
 
 	std::cerr << message << std::endl;
 
+
 }
 
+//czyszczenie ekranu
+void Engine::clearScreen(Uint8 r, Uint8 g, Uint8 b) {
+	SDL_SetRenderDrawColor(render, r, g, b, 255);
+	SDL_RenderClear(render);
+}
 
+void Engine::renderFrame() {
+	// ustawienie renderowania do aktualnego bufora
+	SDL_SetRenderTarget(render, buffers[currentBuffer]);
+
+	// czyszczenie bufora kolorem t³a
+	clearScreen(80, 80, 120);
+
+	// rysowanie sceny
+	PrimitiveRenderer renderer(render);
+	Point2D point1(50, 150);
+	Point2D point2(400, 500);
+	LineSegment line(point1, point2);
+	renderer.incrementalAlgorithm(100, 50, 400, 100, 255, 255, 255); // bia³a linia
+	line.draw(renderer, 255, 0, 0);
+
+	// przelaczenie na ekran
+	SDL_SetRenderTarget(render, nullptr);
+	SDL_RenderCopy(render, buffers[currentBuffer], nullptr, nullptr);
+	SDL_RenderPresent(render);
+
+	// przejscie do nastepnego bufora (2 lub 3)
+	currentBuffer = (currentBuffer + 1) % bufferCount;
+}
 
 //zamkniecie gry
 void Engine::clean() {
-	if (screenSurface)
-		screenSurface = nullptr;
+	for (auto& buf : buffers)
+		SDL_DestroyTexture(buf);
+	buffers.clear();
+
+	if (render) 
+		SDL_DestroyRenderer(render);
 
 	if (window)
 		SDL_DestroyWindow(window);
