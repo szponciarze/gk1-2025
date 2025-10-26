@@ -4,7 +4,7 @@
 #include<fstream>
 #include<vector>
 
-
+class PrimitiveRenderer;
 
 class Engine {
 private:

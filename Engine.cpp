@@ -1,7 +1,7 @@
 #include "Engine.h"
-#include "PrimitiveRenderer.h"
-#include "Point2D.h"
-#include "LineSegment.h"
+#include"PrimitiveRenderer.h"
+#include"Point2D.h"
+#include"LineSegment.h"
 #include<iostream>
 #include<SDL.h>
 #include<string>
@@ -131,6 +131,28 @@ void Engine::renderFrame() {
 	LineSegment line(point1, point2);
 	renderer.incrementalAlgorithm(100, 50, 400, 100, 255, 255, 255); // bia³a linia
 	line.draw(renderer, 255, 0, 0);
+
+	// Dodatkowe prymitywy do testów
+	renderer.incrementalAlgorithm(50, 50, 200, 100, 255, 0, 0);
+	renderer.incrementalAlgorithm(50, 100, 200, 50, 0, 255, 0);
+	// Niebieski pusty prostok¹t
+	renderer.drawRect(300, 100, 100, 50, 0, 0, 255);
+	// ¯ó³ty pe³ny prostok¹t
+	renderer.fillRect(300, 200, 100, 50, 255, 255, 0);
+	// Fioletowe puste ko³o
+	renderer.drawCircle(600, 100, 50, 255, 0, 255);
+	// B³êkitne wype³nione ko³o
+	renderer.fillCircle(600, 200, 50, 0, 255, 255);
+
+	// --- LINIE £AMANE ---
+	std::vector<Point2D> polylinePoints = {
+		Point2D(50, 400),
+		Point2D(150, 450),
+		Point2D(250, 400),
+		Point2D(350, 450)
+	};
+	renderer.drawPolyline(polylinePoints, 255, 128, 0, false); // otwarta
+	renderer.drawPolyline(polylinePoints, 0, 255, 255, true);  // zamkniêta
 
 	// przelaczenie na ekran
 	SDL_SetRenderTarget(render, nullptr);

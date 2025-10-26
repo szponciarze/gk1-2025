@@ -10,15 +10,15 @@ public:
 	Point2D(int x, int y) :x(x), y(y) {}
 
 	//Odczytanie wspó³rzêdnych punktu
-	int getX() { return x; }
-	int getY() { return y; }
+	int getX() const { return x; }
+	int getY() const { return y; }
 
 	//Modyfikacja wspó³rzêdnych punktu
-	int setX(int newX) { x = newX;}
-	int setY(int newY) { y = newY;}
+	void setX(int newX) { x = newX;}
+	void setY(int newY) { y = newY;}
 
 	//Rysuje punkt
-	void draw(PrimitiveRenderer& renderer, Uint8 r, Uint8 g, Uint8 b) {
+	void draw(PrimitiveRenderer& renderer, Uint8 r, Uint8 g, Uint8 b) const {
 		renderer.putPixel(x, y, r, g, b);
 	}
 

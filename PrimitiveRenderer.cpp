@@ -1,6 +1,11 @@
 #include "PrimitiveRenderer.h"
-#include<iostream>
-#include<SDL.h>
+#include "Point2D.h"
+#include "LineSegment.h"
+#include <algorithm>
+#include <iostream>
+#include <SDL.h>
+#include <vector>
+#include <cmath> 
 
 //Rysuje pixel
 void PrimitiveRenderer::putPixel(int x, int y, Uint8 r, Uint8 g, Uint8 b) {
@@ -68,4 +73,76 @@ void PrimitiveRenderer::incrementalAlgorithm(int x1, int y1, int x2, int y2, Uin
 	}
 	
 
+}
+// Rysuje pusty prostok¹t
+void PrimitiveRenderer::drawRect(int x, int y, int w, int h, Uint8 r, Uint8 g, Uint8 b) {
+	if (!renderer) return;
+	SDL_SetRenderDrawColor(renderer, r, g, b, 255);
+	SDL_Rect rect = { x, y, w, h };
+	SDL_RenderDrawRect(renderer, &rect);
+}
+
+// Rysuje wype³niony prostok¹t
+void PrimitiveRenderer::fillRect(int x, int y, int w, int h, Uint8 r, Uint8 g, Uint8 b) {
+	if (!renderer) return;
+	SDL_SetRenderDrawColor(renderer, r, g, b, 255);
+	SDL_Rect rect = { x, y, w, h };
+	SDL_RenderFillRect(renderer, &rect);
+}
+
+// Rysuje pusty okr¹g (Bresenham)
+void PrimitiveRenderer::drawCircle(int cx, int cy, int radius, Uint8 r, Uint8 g, Uint8 b) {
+	if (!renderer) return;
+	int x = radius;
+	int y = 0;
+	int decisionOver2 = 1 - x;
+
+	while (y <= x) {
+		putPixel(cx + x, cy + y, r, g, b);
+		putPixel(cx + y, cy + x, r, g, b);
+		putPixel(cx - x, cy + y, r, g, b);
+		putPixel(cx - y, cy + x, r, g, b);
+		putPixel(cx - x, cy - y, r, g, b);
+		putPixel(cx - y, cy - x, r, g, b);
+		putPixel(cx + x, cy - y, r, g, b);
+		putPixel(cx + y, cy - x, r, g, b);
+		y++;
+		if (decisionOver2 <= 0) decisionOver2 += 2 * y + 1;
+		else { x--; decisionOver2 += 2 * (y - x) + 1; }
+	}
+}
+
+// Rysuje wype³niony okr¹g
+void PrimitiveRenderer::fillCircle(int cx, int cy, int radius, Uint8 r, Uint8 g, Uint8 b) {
+	if (!renderer) return;
+	for (int y = -radius; y <= radius; y++) {
+		for (int x = -radius; x <= radius; x++) {
+			if (x * x + y * y <= radius * radius) {
+				putPixel(cx + x, cy + y, r, g, b);
+			}
+		}
+	}
+}
+void PrimitiveRenderer::drawPolyline(const std::vector<Point2D>& points, Uint8 r, Uint8 g, Uint8 b, bool closed) {
+	if (points.size() < 2) return;
+	for (size_t i = 0; i < points.size() - 1; ++i) {
+
+		incrementalAlgorithm(points[i].getX(), points[i].getY(),
+			points[i + 1].getX(), points[i + 1].getY(),
+			r, g, b);
+	}
+	if (closed) {
+		incrementalAlgorithm(points.back().getX(), points.back().getY(),
+			points.front().getX(), points.front().getY(),
+			r, g, b);
+	}
+}
+
+// Linie ³amane po odcinkach
+void PrimitiveRenderer::drawPolyline(const std::vector<LineSegment>& segments, Uint8 r, Uint8 g, Uint8 b) {
+	for (const auto& seg : segments) {
+		incrementalAlgorithm(seg.getFirst().getX(), seg.getFirst().getY(),
+			seg.getLast().getX(), seg.getLast().getY(),
+			r, g, b);
+	}
 }
