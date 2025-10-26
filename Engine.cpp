@@ -31,7 +31,7 @@ bool Engine::init(const std::string& windowtitle, int x, int y, int width, int h
 	this->keyboardOn = keyboardOn;
 	this->targetFPS = targetFPS;
 	this->frameDelay = 1000 / targetFPS;
-	this->bufferCount = (bufferCount < 1) ? 1 : bufferCount; 
+	this->bufferCount = (bufferCount < 2) ? 2 : 3; 
 	this->currentBuffer = 0;
 
 	Uint32 flags = Fullscreen ? SDL_WINDOW_FULLSCREEN : SDL_WINDOW_SHOWN;
