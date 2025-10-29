@@ -29,6 +29,10 @@ public:
 	void drawCircle(int cx, int cy, int radius, Uint8 r, Uint8 g, Uint8 b);
 	//	Rysuje wype³nione ko³o
 	void fillCircle(int cx, int cy, int radius, Uint8 r, Uint8 g, Uint8 b);
+	// Rysuje pust¹ elipsê
+	void drawEllipse(int cx, int cy, int Rx, int Ry, Uint8 r, Uint8 g, Uint8 b);
+	//Rysuje wype³nion¹ elipsê
+	void fillEllipse(int cx, int cy, int Rx, int Ry, Uint8 r, Uint8 g, Uint8 b);
 	//Linie ³amane
 	void drawPolyline(const std::vector<Point2D>& points, Uint8 r, Uint8 g, Uint8 b, bool closed = false);
 	void drawPolyline(const std::vector<LineSegment>& segments, Uint8 r, Uint8 g, Uint8 b);

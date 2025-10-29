@@ -123,6 +123,37 @@ void PrimitiveRenderer::fillCircle(int cx, int cy, int radius, Uint8 r, Uint8 g,
 		}
 	}
 }
+//Rysuje pust¹ elipsê
+void PrimitiveRenderer::drawEllipse(int cx, int cy, int Rx, int Ry, Uint8 r, Uint8 g, Uint8 b) {
+	if (!renderer) return;
+
+	for (float alpha = 0.0f; alpha < M_PI/2; alpha += 0.01f) {
+		int x = static_cast<int>(Rx * cos(alpha));
+		int y = static_cast<int>(Ry * sin(alpha));
+
+		putPixel(cx + x, cy + y, r, g, b);
+		putPixel(cx - x, cy + y, r, g, b);
+		putPixel(cx + x, cy - y, r, g, b);
+		putPixel(cx - x, cy - y, r, g, b);
+	}
+}
+//Rysuje wype³nion¹ elipsê
+void PrimitiveRenderer::fillEllipse(int cx, int cy, int Rx, int Ry, Uint8 r, Uint8 g, Uint8 b) {
+	if (!renderer) return;
+
+	for (float alpha = 0.0f; alpha < M_PI / 2; alpha += 0.01f) {
+		int x = static_cast<int>(Rx * cos(alpha));
+		int y = static_cast<int>(Ry * sin(alpha));
+
+		for (int dx = 0; dx <= x; dx++) {
+			putPixel(cx + dx, cy + y, r, g, b);
+			putPixel(cx - dx, cy + y, r, g, b);
+			putPixel(cx + dx, cy - y, r, g, b);
+			putPixel(cx - dx, cy - y, r, g, b);
+
+		}
+	}
+}
 void PrimitiveRenderer::drawPolyline(const std::vector<Point2D>& points, Uint8 r, Uint8 g, Uint8 b, bool closed) {
 	if (points.size() < 2) return;
 	for (size_t i = 0; i < points.size() - 1; ++i) {

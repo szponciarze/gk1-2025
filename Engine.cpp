@@ -143,6 +143,10 @@ void Engine::renderFrame() {
 	renderer.drawCircle(600, 100, 50, 255, 0, 255);
 	// B³êkitne wype³nione ko³o
 	renderer.fillCircle(600, 200, 50, 0, 255, 255);
+	// Zielona pusta elipsa
+	renderer.drawEllipse(600, 300, 20, 40, 0, 255, 0);
+	// Czerwona wype³niona elipsa
+	renderer.fillEllipse(600, 400, 20, 40, 255, 0, 0);
 
 	// --- LINIE £AMANE ---
 	std::vector<Point2D> polylinePoints = {
