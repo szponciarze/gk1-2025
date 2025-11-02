@@ -1,4 +1,4 @@
-#include "Engine.h"
+ï»¿#include "Engine.h"
 #include"PrimitiveRenderer.h"
 #include"Point2D.h"
 #include"LineSegment.h"
@@ -121,7 +121,7 @@ void Engine::renderFrame() {
 	// ustawienie renderowania do aktualnego bufora
 	SDL_SetRenderTarget(render, buffers[currentBuffer]);
 
-	// czyszczenie bufora kolorem t³a
+	// czyszczenie bufora kolorem tla
 	clearScreen(80, 80, 120);
 
 	// rysowanie sceny
@@ -129,26 +129,26 @@ void Engine::renderFrame() {
 	Point2D point1(50, 150);
 	Point2D point2(400, 500);
 	LineSegment line(point1, point2);
-	renderer.incrementalAlgorithm(100, 50, 400, 100, 255, 255, 255); // bia³a linia
+	renderer.incrementalAlgorithm(100, 50, 400, 100, 255, 255, 255); // biala linia
 	line.draw(renderer, 255, 0, 0);
 
-	// Dodatkowe prymitywy do testów
+	// Dodatkowe prymitywy do testow
 	renderer.incrementalAlgorithm(50, 50, 200, 100, 255, 0, 0);
 	renderer.incrementalAlgorithm(50, 100, 200, 50, 0, 255, 0);
-	// Niebieski pusty prostok¹t
+	// Niebieski pusty prostokat
 	renderer.drawRect(300, 100, 100, 50, 0, 0, 255);
-	// ¯ó³ty pe³ny prostok¹t
+	// Zolty pelny prostokat
 	renderer.fillRect(300, 200, 100, 50, 255, 255, 0);
-	// Fioletowe puste ko³o
+	// Fioletowe puste kolo
 	renderer.drawCircle(600, 100, 50, 255, 0, 255);
-	// B³êkitne wype³nione ko³o
+	// Blekitne wypelnione kolo
 	renderer.fillCircle(600, 200, 50, 0, 255, 255);
 	// Zielona pusta elipsa
 	renderer.drawEllipse(600, 300, 20, 40, 0, 255, 0);
-	// Czerwona wype³niona elipsa
+	// Czerwona wypelniona elipsa
 	renderer.fillEllipse(600, 400, 20, 40, 255, 0, 0);
 
-	// --- LINIE £AMANE ---
+	// --- LINIE LAMANE ---
 	std::vector<Point2D> polylinePoints = {
 		Point2D(50, 400),
 		Point2D(150, 450),
@@ -156,7 +156,17 @@ void Engine::renderFrame() {
 		Point2D(350, 450)
 	};
 	renderer.drawPolyline(polylinePoints, 255, 128, 0, false); // otwarta
-	renderer.drawPolyline(polylinePoints, 0, 255, 255, true);  // zamkniêta
+	renderer.drawPolyline(polylinePoints, 0, 255, 255, true);  // zamkniÄ™ta
+
+
+	renderer.drawRect(100, 300, 200, 100, 0, 0, 0);
+	renderer.fillRect(450, 200, 150, 120, 255, 255, 0);
+
+
+	renderer.borderFill(buffers[currentBuffer], width, height,150, 350, 0, 0, 0,255, 255, 255);
+
+
+	//renderer.floodFill(buffers[currentBuffer], width, height,320, 230, 255, 255, 255);
 
 	// przelaczenie na ekran
 	SDL_SetRenderTarget(render, nullptr);
@@ -166,6 +176,7 @@ void Engine::renderFrame() {
 	// przejscie do nastepnego bufora (2 lub 3)
 	currentBuffer = (currentBuffer + 1) % bufferCount;
 }
+
 
 //zamkniecie gry
 void Engine::clean() {

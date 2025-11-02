@@ -23,7 +23,6 @@ private:
 	Uint32 frameDelay;
 	Uint32 frameStart;
 	Uint32 frameTime;
-
 	std::ofstream logFile;
 
 public:

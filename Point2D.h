@@ -9,11 +9,11 @@ private:
 public:
 	Point2D(int x, int y) :x(x), y(y) {}
 
-	//Odczytanie wspó³rzêdnych punktu
+	//Odczytanie wspolrzednych punktu
 	int getX() const { return x; }
 	int getY() const { return y; }
 
-	//Modyfikacja wspó³rzêdnych punktu
+	//Modyfikacja wspolrzednych punktu
 	void setX(int newX) { x = newX;}
 	void setY(int newY) { y = newY;}
 

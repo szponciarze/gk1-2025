@@ -17,6 +17,8 @@ private:
 public:
 	PrimitiveRenderer(SDL_Renderer* renderer) :renderer(renderer) {}
 
+	bool getPixel(int x, int y, Uint8& r, Uint8& g, Uint8& b);
+
 	void putPixel(int x, int y, Uint8 r, Uint8 g, Uint8 b);
 
 	void incrementalAlgorithm(int x1, int y1, int x2, int y2, Uint8 r, Uint8 g, Uint8 b);
@@ -36,8 +38,10 @@ public:
 	//Linie ³amane
 	void drawPolyline(const std::vector<Point2D>& points, Uint8 r, Uint8 g, Uint8 b, bool closed = false);
 	void drawPolyline(const std::vector<LineSegment>& segments, Uint8 r, Uint8 g, Uint8 b);
-
-
+	//Metoda wypelniania kolorem flood fill
+	void floodFill(SDL_Texture* targetTexture, int textureWidth, int textureHeight, int startX, int startY, Uint8 newR, Uint8 newG, Uint8 newB);
+	//Metoda wypelniania kolorem border fill
+	void borderFill(SDL_Texture* targetTexture, int textureWidth, int textureHeight, int startX, int startY,Uint8 borderR, Uint8 borderG, Uint8 borderB, Uint8 fillR, Uint8 fillG, Uint8 fillB);
 
 
 };

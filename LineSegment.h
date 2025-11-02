@@ -12,11 +12,11 @@ private:
 public:
 	LineSegment(const Point2D& p1, const Point2D& p2):first(p1),last(p2){}
 
-	//Odczytuje poszczególne koñce odcinka
+	//Odczytuje poszczegolne konce odcinka
 	Point2D getFirst() const   { return first; }
 	Point2D getLast() const  { return last; }
 
-	//Modyfikuje poszczegó³ne koñce odcinka
+	//Modyfikuje poszczegolne konce odcinka
 	void setFirst(Point2D newFirst) { first = newFirst; }
 	void setLast(Point2D newLast) { last = newLast; }
 
