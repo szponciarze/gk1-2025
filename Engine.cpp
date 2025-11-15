@@ -1,12 +1,25 @@
 ﻿#include "Engine.h"
 #include"PrimitiveRenderer.h"
+#include"RectangleFilled.h"
+#include"Circle.h"
 #include"Point2D.h"
 #include"LineSegment.h"
+#include"GameObject.h"
+#include"CircleFilled.h"
+#include"DrawableObject.h"
+#include"TransformableObject.h"
+#include"UpdatableObject.h"
+#include"Rectangle.h"
+#include<vector>
 #include<iostream>
 #include<SDL.h>
 #include<string>
-
-
+Rectangle* rect = new Rectangle(150, 100, 200, 150, 255, 0, 0);
+RectangleFilled* rectfill = new RectangleFilled(150, 100, 200, 150, 255, 255, 255);
+Circle * circle = new Circle(50, 50, 10, 255, 255, 255);
+CircleFilled* circlefill = new CircleFilled(75, 75, 50, 125, 125, 125);
+std::vector<ShapeObject*> shapeObjects;
+std::vector<UpdatableObject*> updatableObjects;
 //Inicjalizacja biblioteki graficznej
 bool Engine::init(const std::string& windowtitle, int x, int y, int width, int height, bool Fullscreen, bool mouseOn, bool keyboardOn, int targetFPS, int bufferCount) {
 
@@ -69,7 +82,14 @@ bool Engine::init(const std::string& windowtitle, int x, int y, int width, int h
 //Glowna petla gry
 void Engine::mainLoop() {
 	SDL_Event e;
-
+	shapeObjects.push_back(rect);
+	updatableObjects.push_back(rect);
+	shapeObjects.push_back(rectfill);
+	updatableObjects.push_back(rectfill);
+	shapeObjects.push_back(circle);
+	updatableObjects.push_back(circle);
+	shapeObjects.push_back(circlefill);
+	updatableObjects.push_back(circlefill);
 	while (isRunning) {
 		frameStart = SDL_GetTicks();
 
@@ -85,6 +105,13 @@ void Engine::mainLoop() {
 			if (mouseOn && e.type == SDL_MOUSEBUTTONDOWN) {
 				std::cout << "Nacisnieto klawisz myszy w: (" << e.button.x << "," << e.button.y << ")" << std::endl;
 			}
+
+		}
+
+
+		float dt = frameDelay / 1000.0f;  // czas klatki w sekundach
+		for (auto& obj : updatableObjects) {
+			obj->update(dt); // tutaj już działa
 		}
 
 		renderFrame();
@@ -92,10 +119,10 @@ void Engine::mainLoop() {
 		frameTime = SDL_GetTicks() - frameStart;
 		if (frameDelay > frameTime)	//Czasomierz
 			SDL_Delay(frameDelay - frameTime);
+
+
 	}
-
 	clean();
-
 }
 
 //zapisywanie bledow do pliku
@@ -122,8 +149,19 @@ void Engine::renderFrame() {
 	SDL_SetRenderTarget(render, buffers[currentBuffer]);
 
 	// czyszczenie bufora kolorem tla
-	clearScreen(80, 80, 120);
 
+
+
+
+	clearScreen(80, 80, 120);
+	for (auto obj : shapeObjects) {
+		obj->draw(render); // 
+	}
+
+
+
+
+	/*
 	// rysowanie sceny
 	PrimitiveRenderer renderer(render);
 	Point2D point1(50, 150);
@@ -167,7 +205,7 @@ void Engine::renderFrame() {
 
 
 	//renderer.floodFill(buffers[currentBuffer], width, height,320, 230, 255, 255, 255);
-
+	*/
 	// przelaczenie na ekran
 	SDL_SetRenderTarget(render, nullptr);
 	SDL_RenderCopy(render, buffers[currentBuffer], nullptr, nullptr);
