@@ -14,10 +14,18 @@
 #include<iostream>
 #include<SDL.h>
 #include<string>
+#include "Ellipse.h"
+#include "EllipseFilled.h"
+#include "Polyline.h"
+#include "Line.h"
 Rectangle* rect = new Rectangle(150, 100, 200, 150, 255, 0, 0);
 RectangleFilled* rectfill = new RectangleFilled(150, 100, 200, 150, 255, 255, 255);
 Circle * circle = new Circle(50, 50, 10, 255, 255, 255);
 CircleFilled* circlefill = new CircleFilled(75, 75, 50, 125, 125, 125);
+Ellipse* ellipse = new Ellipse(400, 300, 80, 30, 255, 255, 0);
+EllipseFilled* ellipsefill = new EllipseFilled(600, 300, 40, 80, 0, 255, 255);
+Polyline* polyline = new Polyline({ {100,100},{200,200},{300,120},{350,180}}, 255, 128, 0);
+Line* line = new Line(100, 300, 500, 350, 255, 255, 0);
 std::vector<ShapeObject*> shapeObjects;
 std::vector<UpdatableObject*> updatableObjects;
 //Inicjalizacja biblioteki graficznej
@@ -90,6 +98,14 @@ void Engine::mainLoop() {
 	updatableObjects.push_back(circle);
 	shapeObjects.push_back(circlefill);
 	updatableObjects.push_back(circlefill);
+	shapeObjects.push_back(ellipse);
+	updatableObjects.push_back(ellipse);
+	shapeObjects.push_back(ellipsefill);
+	updatableObjects.push_back(ellipsefill);
+	shapeObjects.push_back(polyline);
+	updatableObjects.push_back(polyline);
+	shapeObjects.push_back(line);
+	updatableObjects.push_back(line);
 	while (isRunning) {
 		frameStart = SDL_GetTicks();
 
