@@ -18,6 +18,8 @@
 #include "EllipseFilled.h"
 #include "Polyline.h"
 #include "Line.h"
+#include "Player.h"
+Player* player= new Player(200, 150, 60, 60, 255, 0, 0);
 Rectangle* rect = new Rectangle(150, 100, 200, 150, 255, 0, 0);
 RectangleFilled* rectfill = new RectangleFilled(150, 100, 200, 150, 255, 255, 255);
 Circle * circle = new Circle(50, 50, 10, 255, 255, 255);
@@ -106,6 +108,9 @@ void Engine::mainLoop() {
 	updatableObjects.push_back(polyline);
 	shapeObjects.push_back(line);
 	updatableObjects.push_back(line);
+	shapeObjects.push_back(player);
+	updatableObjects.push_back(player);
+
 	while (isRunning) {
 		frameStart = SDL_GetTicks();
 

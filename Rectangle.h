@@ -3,9 +3,12 @@
 #include"UpdatableObject.h"
 #include<SDL.h>
 class Rectangle : public ShapeObject, public UpdatableObject {
-private:
-    float x,y,width,height;
+protected:
+    float x, y, width, height;
     float rotation;
+private:
+    
+    
     Uint8 r,g,b;
 public:
     Rectangle(float x, float y, float w, float h, Uint8 r = 255, Uint8 g = 0, Uint8 b = 0);
