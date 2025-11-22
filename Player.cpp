@@ -10,16 +10,7 @@ void Player::update(float dt)
 {
     const Uint8* keystates = SDL_GetKeyboardState(nullptr);
     handleKeyboard(keystates);
-    
-    int mouseX, mouseY;
-    Uint32 mouseState = SDL_GetMouseState(&mouseX, &mouseY);
-
-    if (mouseState & SDL_BUTTON(SDL_BUTTON_LEFT))
-    {
-        rotate(2.0f);
-    }
-
-
+ 
 }
 
 void Player::draw(SDL_Renderer* renderer)

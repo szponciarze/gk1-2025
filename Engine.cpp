@@ -19,6 +19,7 @@
 #include "Polyline.h"
 #include "Line.h"
 #include "Player.h"
+#include "Bitmap.h"
 Player* player= new Player(200, 150, 60, 60, 255, 0, 0);
 Rectangle* rect = new Rectangle(150, 100, 200, 150, 255, 0, 0);
 RectangleFilled* rectfill = new RectangleFilled(150, 100, 200, 150, 255, 255, 255);
@@ -28,12 +29,13 @@ Ellipse* ellipse = new Ellipse(400, 300, 80, 30, 255, 255, 0);
 EllipseFilled* ellipsefill = new EllipseFilled(600, 300, 40, 80, 0, 255, 255);
 Polyline* polyline = new Polyline({ {100,100},{200,200},{300,120},{350,180}}, 255, 128, 0);
 Line* line = new Line(100, 300, 500, 350, 255, 255, 0);
+BitmapHandler bitmapHandler;
 std::vector<ShapeObject*> shapeObjects;
 std::vector<UpdatableObject*> updatableObjects;
 //Inicjalizacja biblioteki graficznej
 bool Engine::init(const std::string& windowtitle, int x, int y, int width, int height, bool Fullscreen, bool mouseOn, bool keyboardOn, int targetFPS, int bufferCount) {
 
-
+	
 	//zapisywanie bledow do pliku
 	logFile.open("logFile.txt", std::ios::out | std::ios::app);
 	if (!logFile) {
@@ -83,6 +85,7 @@ bool Engine::init(const std::string& windowtitle, int x, int y, int width, int h
 		buffers.push_back(buffer);
 	}
 
+	bitmapHandler.loadBitmap(render, "hero", "hero.bmp");
 
 	isRunning = true;
 	return true;
@@ -129,7 +132,7 @@ void Engine::mainLoop() {
 
 		}
 
-
+		
 		float dt = frameDelay / 1000.0f;  // czas klatki w sekundach
 		for (auto& obj : updatableObjects) {
 			obj->update(dt); // tutaj już działa
@@ -175,6 +178,7 @@ void Engine::renderFrame() {
 
 
 	clearScreen(80, 80, 120);
+	bitmapHandler.renderBitmap(render, "hero", 100, 100);
 	for (auto obj : shapeObjects) {
 		obj->draw(render); // 
 	}

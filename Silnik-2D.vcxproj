@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Bitmap.cpp" />
     <ClCompile Include="Circle.cpp" />
     <ClCompile Include="CircleFilled.cpp" />
     <ClCompile Include="DrawableObject.cpp" />
@@ -38,6 +39,7 @@
     <ClCompile Include="UpdatableObject.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Bitmap.h" />
     <ClInclude Include="Circle.h" />
     <ClInclude Include="CircleFilled.h" />
     <ClInclude Include="DrawableObject.h" />
