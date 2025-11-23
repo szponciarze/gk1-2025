@@ -1,16 +1,19 @@
 #pragma once
-#include "Rectangle.h"
+#include "SpriteObject.h" // Zmieniamy dziedziczenie
 
-class Player : public Rectangle {
+class Player : public SpriteObject {
+private:
+    float speed = 200.0f; // Predkosc w pikselach na sekunde
+
 public:
-    Player(float x, float y, float w, float h, Uint8 r, Uint8 g, Uint8 b);
+    // Konstruktor przyjmuje tylko pozycje i wymiary, bez kolorow
+    Player(float x, float y, float w, float h);
 
+    // Nadpisujemy update, by dodac obs³uge klawiatury
     void update(float dt) override;
-    void draw(SDL_Renderer* renderer) override;
 
-    
 
 private:
-    float speed = 200.0f;
-    void handleKeyboard(const Uint8* keystates);
+    // Prywatna metoda do obs³ugi wejscia
+    void handleKeyboard(const Uint8* keystates, float dt);
 };
