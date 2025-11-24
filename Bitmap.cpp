@@ -11,9 +11,10 @@ BitmapHandler::~BitmapHandler() {
 bool BitmapHandler::loadBitmap(SDL_Renderer* renderer, const std::string& id, const std::string& filePath) {
     SDL_Surface* surface = SDL_LoadBMP(filePath.c_str());
     if (!surface) {
+        std::cerr << "Blad ladowania pliku BMP: " << SDL_GetError() << " dla pliku: " << filePath << std::endl;
         return false;
     }
-
+    SDL_SetColorKey(surface, SDL_TRUE, SDL_MapRGB(surface->format, 255, 255, 255));
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_FreeSurface(surface);
 

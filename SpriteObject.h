@@ -4,28 +4,23 @@
 #include "AnimatedObject.h"
 #include <map>
 
-// Klasa dla animowanych obiektów (sprite'ów).
-// £¹czy mo¿liwoœæ rysowania bitmap (BitmapObject) z logik¹ animacji (AnimatedObject).
+// L¹czy mozliwosc rysowania bitmap (BitmapObject) z logika animacji (AnimatedObject).
 class SpriteObject : public BitmapObject, public AnimatedObject {
 protected:
-    // Mapa przechowuj¹ca nazwy animacji i odpowiadaj¹ce im sekwencje ID bitmap
+
     std::map<std::string, std::vector<std::string>> m_animations;
     std::string m_currentAnimation;
 
-    float m_animSpeed; // Prêdkoœæ animacji w klatkach na sekundê
-    float m_animTimer; // Wewnêtrzny licznik czasu do zmiany klatek
+    float m_animSpeed; 
+    float m_animTimer; 
 
 public:
-    // Konstruktor przyjmuje tylko pozycjê i wymiary. Bitmapy dodaje siê póŸniej.
+    // Konstruktor przyjmuje tylko pozycje i wymiary. Bitmapy dodaje siê pozniej.
     SpriteObject(float x, float y, float w, float h, float animSpeed = 10.0f);
 
-    // Dodaje now¹ sekwencjê animacji
+   
     void addAnimation(const std::string& name, const std::vector<std::string>& bitmapIDs);
-
-    // Ustawia bie¿¹c¹ animacjê do odtwarzania
     void setAnimation(const std::string& name);
-
-    // Nadpisane metody wirtualne
     void update(float dt) override;
     void animate(float dt) override;
 };

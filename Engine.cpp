@@ -18,11 +18,11 @@
 #include "EllipseFilled.h"
 #include "Polyline.h"
 #include "Line.h"
-#include "Player.h" // Ważny include
-#include "Bitmap.h" // Ważny include
+#include "Player.h" 
+#include "Bitmap.h" 
 
-// Tworzymy nowego gracza, który nie jest już prostokątem z kolorem, ale obiektem ze spritem
-Player* player = new Player(200, 150, 64, 64); // Wymiary pasujące do sprite'ów
+
+Player* player = new Player(200, 150, 64, 64); // Wymiary pasujace do sprite'ow
 Rectangle* rect = new Rectangle(150, 100, 200, 150, 255, 0, 0);
 RectangleFilled* rectfill = new RectangleFilled(150, 100, 200, 150, 255, 255, 255);
 Circle* circle = new Circle(50, 50, 10, 255, 255, 255);
@@ -32,13 +32,13 @@ EllipseFilled* ellipsefill = new EllipseFilled(600, 300, 40, 80, 0, 255, 255);
 Polyline* polyline = new Polyline({ {100,100},{200,200},{300,120},{350,180} }, 255, 128, 0);
 Line* line = new Line(100, 300, 500, 350, 255, 255, 0);
 
-// BitmapHandler jest teraz używany przez BitmapObject i jego pochodne
+// BitmapHandler jest teraz uzywany przez BitmapObject i jego pochodne
 BitmapHandler bitmapHandler;
 
 std::vector<ShapeObject*> shapeObjects;
 std::vector<UpdatableObject*> updatableObjects;
 
-//Inicjalizacja biblioteki graficznej
+
 bool Engine::init(const std::string& windowtitle, int x, int y, int width, int height, bool Fullscreen, bool mouseOn, bool keyboardOn, int targetFPS, int bufferCount) {
 
     logFile.open("logFile.txt", std::ios::out | std::ios::app);
@@ -85,23 +85,23 @@ bool Engine::init(const std::string& windowtitle, int x, int y, int width, int h
         buffers.push_back(buffer);
     }
 
-    // --- NOWY KOD ŁADUJĄCY SPRITE'Y ---
-    // Ładowanie wszystkich 16 klatek animacji
+    //ANIMACJE
+    // Ladowanie wszystkich 16 klatek animacji
     std::vector<std::string> directions = { "down", "up", "left", "right" };
     for (const auto& dir : directions) {
         for (int i = 0; i < 4; ++i) {
             std::string id = "hero_" + dir + "_" + std::to_string(i);
-            // Zakładamy, że pliki .bmp są w podfolderze "sprites"
             std::string filePath = "sprites/" + id + ".bmp";
             if (!bitmapHandler.loadBitmap(render, id, filePath)) {
                 logError("Nie udalo sie zaladowac bitmapy: " + filePath);
-                // W prawdziwym projekcie można tu zwrócić false, jeśli bitmapy są krytyczne
+                
             }
         }
     }
-    // --- KONIEC NOWEGO KODU ---
+    
 
     isRunning = true;
+    this->lastTime = SDL_GetTicks();
     return true;
 }
 
@@ -125,16 +125,15 @@ void Engine::mainLoop() {
     shapeObjects.push_back(line);
     updatableObjects.push_back(line);
 
-    // Dodajemy gracza do obu wektorów, ponieważ jest zarówno rysowalny, jak i aktualizowalny
+    // Dodajemy gracza do obu wektorow, poniewaz jest zarowno rysowalny, jak i aktualizowalny
     shapeObjects.push_back(player);
     updatableObjects.push_back(player);
 
     while (isRunning) {
         frameStart = SDL_GetTicks();
-        Uint32 newTime = SDL_GetTicks();
-        // Zamiast stałego dt, obliczamy rzeczywisty czas, jaki upłynął
-        float dt = (newTime - frameStart) / 1000.0f;
-        // Ogranicznik dt, aby uniknąć "skoków" przy dużych lagach
+        Uint32 currentTime = SDL_GetTicks();
+        float dt = (currentTime - lastTime) / 1000.0f;
+        lastTime = currentTime;
         if (dt > 0.05f) {
             dt = 0.05f;
         }
@@ -144,7 +143,7 @@ void Engine::mainLoop() {
                 isRunning = false;
 
             if (keyboardOn && e.type == SDL_KEYDOWN) {
-                // To można zostawić do debugowania, ale główna obsługa klawiatury jest w Player
+                // To można zostawic do debugowania, ale glowna obsluga klawiatury jest w Player
                  std::cout << "Nacisnieto klawisz: " << SDL_GetKeyName(e.key.keysym.sym) << std::endl;
             }
 
@@ -153,7 +152,7 @@ void Engine::mainLoop() {
             }
         }
 
-        // Aktualizacja wszystkich obiektów z uwzględnieniem czasu klatki
+        // Aktualizacja wszystkich obiektow z uwzglednieniem czasu klatki
         for (auto& obj : updatableObjects) {
             obj->update(dt);
         }
@@ -185,9 +184,9 @@ void Engine::renderFrame() {
     clearScreen(80, 80, 120);
 
 
-    // Rysowanie wszystkich obiektów
+    // Rysowanie wszystkich obiektow
     for (auto obj : shapeObjects) {
-        obj->draw(render); // Player zostanie narysowany w tej pętli
+        obj->draw(render); // Player zostanie narysowany w tej petli
     }
 
     SDL_SetRenderTarget(render, nullptr);

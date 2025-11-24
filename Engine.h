@@ -23,13 +23,13 @@ private:
 	Uint32 frameDelay;
 	Uint32 frameStart;
 	Uint32 frameTime;
+	Uint32 lastTime;
 	std::ofstream logFile;
 
 public:
-	//Inicjalizacja biblioteki graficznej
+
 	bool init(const std::string& windowtitle, int x, int y, int width, int height, bool Fullscreen, bool mouseOn, bool keyboardOn, int targetFPS, int bufferCount);
 	
-	//Glowna petla gry
 	void mainLoop();
 
 	//Czyszczenie ekranu do zadanego koloru
@@ -39,7 +39,7 @@ public:
 	void logError(const std::string& message);
 
 
-	//Deinicjalizacja biblioteki graficznej
+	
 	void clean();
 
 	//rysowanie jednej klatki
