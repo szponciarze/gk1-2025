@@ -48,5 +48,21 @@ void Polyline::draw(SDL_Renderer* renderer) {
 }
 
 void Polyline::update(float dt) {
-    translate(20.0f * dt, 0);
+    //translate(20.0f * dt, 0);
+}
+
+bool Polyline::containsPoint(float px, float py) {
+    for (size_t i = 0; i < points.size() - 1; ++i) {
+        float dx = points[i + 1].x - points[i].x;
+        float dy = points[i + 1].y - points[i].y;
+        float length2 = dx * dx + dy * dy;
+        if (length2 == 0) continue;
+        float t = ((px - points[i].x) * dx + (py - points[i].y) * dy) / length2;
+        t = std::fmax(0, std::fmin(1, t));
+        float closestX = points[i].x + t * dx;
+        float closestY = points[i].y + t * dy;
+        float dist2 = (px - closestX) * (px - closestX) + (py - closestY) * (py - closestY);
+        if (dist2 <= 5.0f * 5.0f) return true; // tolerancja 5px
+    }
+    return false;
 }

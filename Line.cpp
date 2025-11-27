@@ -57,5 +57,19 @@ void Line::draw(SDL_Renderer* renderer) {
 
 void Line::update(float dt) {
     //przesuwanie w dol
-    translate(0, 50.0f * dt);
+    //translate(0, 50.0f * dt);
+}
+
+bool Line::containsPoint(float px, float py) {
+    
+    float dx = x2 - x1;
+    float dy = y2 - y1;
+    float length2 = dx * dx + dy * dy;
+    if (length2 == 0) return false; 
+    float t = ((px - x1) * dx + (py - y1) * dy) / length2;
+    t = std::fmax(0, std::fmin(1, t));
+    float closestX = x1 + t * dx;
+    float closestY = y1 + t * dy;
+    float dist2 = (px - closestX) * (px - closestX) + (py - closestY) * (py - closestY);
+    return dist2 <= 5.0f * 5.0f; // tolerancja 5px
 }

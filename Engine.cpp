@@ -168,6 +168,18 @@ void Engine::mainLoop() {
                 std::cout << "Wybrano opcje rysowania wypelnionej elipsy! Nacisnij w dowolne miejsce na ekranie" << std::endl;
                 shapeChoice = 5;
             }
+            if (keyboardOn && e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_6) {
+                std::cout << "Wybrano opcje rysowania wypelnionego prostokata! Nacisnij w dowolne miejsce na ekranie" << std::endl;
+                shapeChoice = 6;
+            }
+            if (keyboardOn && e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_7) {
+                std::cout << "Wybrano opcje rysowania linii! Nacisnij w dowolne miejsce na ekranie" << std::endl;
+                shapeChoice = 7;
+            }
+            if (keyboardOn && e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_8) {
+                std::cout << "Wybrano opcje rysowania polyline! Nacisnij w dowolne miejsce na ekranie" << std::endl;
+                shapeChoice = 8;
+            }
             if (keyboardOn && e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_0) {
                 std::cout << "Tryb rysowania wylaczony!" << std::endl;
                 shapeChoice = 0;
@@ -259,6 +271,29 @@ void Engine::mainLoop() {
                     EllipseFilled* ellipsefill2 = new EllipseFilled(e.button.x, e.button.y, 40, 80, 0, 255, 255);
                     shapeObjects.push_back(ellipsefill2);
                     updatableObjects.push_back(ellipsefill2);
+                    break;
+                }
+                case 6: {
+                    RectangleFilled* rectanglefill2 = new RectangleFilled(e.button.x, e.button.y, 200, 150, 255, 255, 255);
+                    shapeObjects.push_back(rectanglefill2);
+                    updatableObjects.push_back(rectanglefill2);
+                    break;
+                }
+                case 7: {
+                    Line* line2 = new Line(e.button.x, e.button.y, e.button.x + 100, e.button.y, 255, 0, 0);
+                    shapeObjects.push_back(line2);
+                    updatableObjects.push_back(line2);
+                    break;
+                }
+                case 8: {
+                    std::vector<SDL_FPoint> pos = {
+                    {static_cast<float>(e.button.x), static_cast<float>(e.button.y)},
+                    {static_cast<float>(e.button.x + 50), static_cast<float>(e.button.y + 30)},
+                    {static_cast<float>(e.button.x + 100), static_cast<float>(e.button.y)}
+                    };
+                    Polyline* polyline2 = new Polyline(pos, 0, 255, 0);                    
+                    shapeObjects.push_back(polyline2);
+                    updatableObjects.push_back(polyline2);
                     break;
                 }
                 default: 

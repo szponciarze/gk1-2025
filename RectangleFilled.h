@@ -14,5 +14,5 @@ public:
     void scale(float sx, float sy) override;
     void draw(SDL_Renderer* renderer) override;
     void update(float dt) override;
-
+    bool containsPoint(float dx, float dy) override;
 };

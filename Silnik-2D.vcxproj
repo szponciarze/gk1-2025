@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Bitmap.cpp" />
+    <ClCompile Include="BitmapObject.cpp" />
     <ClCompile Include="Circle.cpp" />
     <ClCompile Include="CircleFilled.cpp" />
     <ClCompile Include="DrawableObject.cpp" />
@@ -35,11 +36,14 @@
     <ClCompile Include="Rectangle.cpp" />
     <ClCompile Include="RectangleFilled.cpp" />
     <ClCompile Include="ShapeObject.cpp" />
+    <ClCompile Include="SpriteObject.cpp" />
     <ClCompile Include="TransformableObject.cpp" />
     <ClCompile Include="UpdatableObject.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AnimatedObject.h" />
     <ClInclude Include="Bitmap.h" />
+    <ClInclude Include="BitmapObject.h" />
     <ClInclude Include="Circle.h" />
     <ClInclude Include="CircleFilled.h" />
     <ClInclude Include="DrawableObject.h" />
@@ -56,6 +60,7 @@
     <ClInclude Include="Rectangle.h" />
     <ClInclude Include="RectangleFilled.h" />
     <ClInclude Include="ShapeObject.h" />
+    <ClInclude Include="SpriteObject.h" />
     <ClInclude Include="TransformableObject.h" />
     <ClInclude Include="UpdatableObject.h" />
   </ItemGroup>
@@ -112,8 +117,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\SDL2\include;$(IncludePath)</IncludePath>
-    <ReferencePath>C:\SDL2\lib\x64;$(ReferencePath)</ReferencePath>
+    <IncludePath>G:\SDL2\include;$(IncludePath)</IncludePath>
+    <ReferencePath>G:\SDL2\lib\x64;$(ReferencePath)</ReferencePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -151,7 +156,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\SDL2\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\SDL2\lib\x64;G:\SDL2\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
