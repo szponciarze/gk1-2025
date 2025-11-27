@@ -25,6 +25,8 @@ private:
 	Uint32 frameTime;
 	Uint32 lastTime;
 	std::ofstream logFile;
+	int shapeChoice=NULL;
+	int updateChoice=NULL;
 
 public:
 
@@ -44,5 +46,6 @@ public:
 
 	//rysowanie jednej klatki
 	void renderFrame();
+
 };
 

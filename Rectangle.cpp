@@ -3,54 +3,50 @@
 #include <cmath>
 
 Rectangle::Rectangle(float x, float y, float w, float h, Uint8 r, Uint8 g, Uint8 b) //konstruktor
-    : x(x), y(y), width(w), height(h), rotation(0), r(r), g(g), b(b) {
+    : ShapeObject(x, y, w, h), r(r), g(g), b(b), rotation(0) {
 }
 
 void Rectangle::translate(float dx, float dy) { //przesuniecie prostokata
-    x+=dx;
-    y+=dy; 
+    m_x+=dx;
+    m_y+=dy; 
 }
 void Rectangle::rotate(float angle) { //rotacja prostokata
-    rotation+=angle; 
+    rotation += angle; // w stopniach
 }
 void Rectangle::scale(float sx, float sy) { //skalowanie prostokata
-    width*=sx;
-    height*=sy; 
+    m_w*=sx;
+    m_h*=sy; 
 }
 
-void Rectangle::draw(SDL_Renderer* renderer) { //glowna metoda - rysowanie prostokata
+void Rectangle::draw(SDL_Renderer* renderer) {
     if (!renderer) return;
 
-    //obliczanie srodka prostokata
-    float cx = x+width/2.0f;
-    float cy = y+height/2.0f;
+    float cx = m_x + m_w / 2.0f;
+    float cy = m_y + m_h / 2.0f;
 
-    //wierzcholki prostokata przed obrotem
     float corners[4][2] = {
-        {x,y},
-        {x+width, y},
-        {x+width, y+height},
-        {x, y+height}
+        {m_x, m_y},
+        {m_x + m_w, m_y},
+        {m_x + m_w, m_y + m_h},
+        {m_x, m_y + m_h}
     };
 
-    float rad = rotation*M_PI/180.0f; //konwersja stopni na radiany
+    float rad = rotation * M_PI / 180.0f;
     SDL_Point points[5];
 
-    for (int i=0; i<4; ++i) {
-        float px=corners[i][0];
-        float py=corners[i][1];
-
-        points[i].x=(int)(cx +(px - cx)*cos(rad)-(py - cy)*sin(rad));
-        points[i].y=(int)(cy +(px - cx)*sin(rad)+(py - cy)*cos(rad));
+    for (int i = 0; i < 4; i++) {
+        float dx = corners[i][0] - cx;
+        float dy = corners[i][1] - cy;
+        points[i].x = (int)(cx + dx * cos(rad) - dy * sin(rad));
+        points[i].y = (int)(cy + dx * sin(rad) + dy * cos(rad));
     }
-    points[4]=points[0]; // zamkniêcie prostok¹ta
+    points[4] = points[0];
 
-    SDL_SetRenderDrawColor(renderer,r,g,b,255);
-    SDL_RenderDrawLines(renderer,points,5);
-    //rysoawnie prostokata na rendererze
+    SDL_SetRenderDrawColor(renderer, r, g, b, 255);
+    SDL_RenderDrawLines(renderer, points, 5);
 }
 
 void Rectangle::update(float dt) {
     //obrot prostokata
-    Rectangle::rotate(100.0f*dt);
+    //Rectangle::rotate(100.0f*dt);
 }

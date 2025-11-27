@@ -14,7 +14,8 @@ public:
 	virtual void translate(float tx, float ty);
 	virtual void rotate(float angle);
 	virtual void scale(float sx, float sy);
-
-
+	virtual bool containsPoint(float px, float py);
+	float getX() const;
+	float getY() const;
 
 };

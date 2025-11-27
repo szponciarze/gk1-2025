@@ -5,9 +5,9 @@
 
 class CircleFilled : public ShapeObject, public UpdatableObject {
 private:
-    float cx, cy;   // œrodek okrêgu
+    float cx, cy;  
     float radius;
-    Uint8 r, g, b;  // kolor wype³nienia
+    Uint8 r, g, b;  
 
 public:
     CircleFilled(float cx, float cy, float radius, Uint8 r, Uint8 g, Uint8 b);
@@ -18,4 +18,5 @@ public:
 
     void draw(SDL_Renderer* renderer) override;
     void update(float dt) override;
+    bool containsPoint(float px, float py) override;
 };

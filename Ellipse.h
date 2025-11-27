@@ -5,8 +5,8 @@
 
 class Ellipse : public ShapeObject, public UpdatableObject {
 private:
-    float cx, cy; // srodek
-    float rx, ry; // polosie
+    float cx, cy; 
+    float rx, ry; 
     float rotation;
     Uint8 r, g, b;
 
@@ -19,4 +19,5 @@ public:
 
     void draw(SDL_Renderer* renderer) override;
     void update(float dt) override;
+    bool containsPoint(float dx, float dy) override;
 };

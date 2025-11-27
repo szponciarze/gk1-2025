@@ -2,10 +2,12 @@
 #include <cmath>
 
 Ellipse::Ellipse(float cx, float cy, float rx, float ry, Uint8 r, Uint8 g, Uint8 b)
-    : cx(cx), cy(cy), rx(rx), ry(ry), rotation(0), r(r), g(g), b(b) {
+    : ShapeObject(cx, cy, rx * 2, ry * 2), rx(rx), ry(ry), rotation(0), r(r), g(g), b(b) {
 }
 
 void Ellipse::translate(float dx, float dy) {
+    m_x += dx;
+    m_y += dy;
     cx += dx;
     cy += dy;
 }
@@ -17,6 +19,8 @@ void Ellipse::rotate(float angle) {
 void Ellipse::scale(float sx, float sy) {
     rx *= sx;
     ry *= sy;
+    m_w = rx * 2;
+    m_h = ry * 2;
 }
 
 void Ellipse::draw(SDL_Renderer* renderer) {
@@ -34,11 +38,17 @@ void Ellipse::draw(SDL_Renderer* renderer) {
         float xr = cos(rad) * x - sin(rad) * y;
         float yr = sin(rad) * x + cos(rad) * y;
 
-        SDL_RenderDrawPoint(renderer, (int)(cx + xr), (int)(cy + yr));
+        SDL_RenderDrawPoint(renderer, (int)(m_x + xr), (int)(m_y + yr));
     }
 }
 
 void Ellipse::update(float dt) {
     // krecenie sie elipsy
-    rotate(20.0f * dt);
+    //rotate(20.0f * dt);
+}
+
+bool Ellipse::containsPoint(float px, float py) {
+    float dx = px - m_x;
+    float dy = py - m_y;
+    return (dx * dx) / (rx * rx) + (dy * dy) / (ry * ry) <= 1.0f;
 }
