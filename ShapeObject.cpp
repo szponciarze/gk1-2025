@@ -14,3 +14,10 @@ void ShapeObject::scale(float sx, float sy) {
 	m_w *= sx;
 	m_h *= sy;
 }
+
+bool ShapeObject::containsPoint(float px, float py) {
+		return (px >= m_x && px <= m_x + m_w && py >= m_y && py <= m_y + m_h);
+}
+
+float ShapeObject::getX() const { return m_x; }
+float ShapeObject::getY() const { return m_y; }
