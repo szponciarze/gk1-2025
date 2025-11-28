@@ -1,16 +1,28 @@
 #include "EllipseFilled.h"
 #include <cmath>
+#include <algorithm>
+#include <iostream> 
 
 EllipseFilled::EllipseFilled(float cx, float cy, float rx, float ry, Uint8 r, Uint8 g, Uint8 b)
-    : ShapeObject(cx, cy, rx * 2, ry * 2), rx(rx), ry(ry), r(r), g(g), b(b) {
+    : ShapeObject(cx, cy, rx * 2, ry * 2), 
+    cx(cx), cy(cy), rx(rx), ry(ry),
+    rotation(0.0f),
+    r(r), g(g), b(b) {
+
+    
+    m_x = cx;
+    m_y = cy;
 }
 
 void EllipseFilled::translate(float dx, float dy) {
- 
     m_x += dx;
     m_y += dy;
     cx += dx;
     cy += dy;
+}
+
+void EllipseFilled::rotate(float angle) {
+    rotation += angle;
 }
 
 void EllipseFilled::scale(float sx, float sy) {
@@ -25,23 +37,53 @@ void EllipseFilled::draw(SDL_Renderer* renderer) {
 
     SDL_SetRenderDrawColor(renderer, r, g, b, 255);
 
-    for (int y = -ry; y <= ry; y++) {
-        float t = 1.0f - ((float)y * y) / (ry * ry);
-        if (t < 0) continue;
+    
+    float rad = rotation * M_PI / 180.0f;
+    float cosA = cos(-rad);
+    float sinA = sin(-rad);
 
-        int x = (int)(rx * sqrt(t));
 
-        SDL_RenderDrawLine(renderer,(int)(m_x - x), (int)(m_y + y),(int)(m_x + x), (int)(m_y + y));
+    float maxR = std::max(rx, ry);
+    int range = static_cast<int>(maxR + 2); 
+
+    int minX = static_cast<int>(cx - range);
+    int maxX = static_cast<int>(cx + range);
+    int minY = static_cast<int>(cy - range);
+    int maxY = static_cast<int>(cy + range);
+
+  
+    for (int py = minY; py <= maxY; py++) {
+        for (int px = minX; px <= maxX; px++) {
+
+            float dx = px - cx;
+            float dy = py - cy;
+
+          
+            float localX = dx * cosA - dy * sinA;
+            float localY = dx * sinA + dy * cosA;
+
+           
+            if (((localX * localX) / (rx * rx) + (localY * localY) / (ry * ry)) <= 1.0f) {
+                SDL_RenderDrawPoint(renderer, px, py);
+            }
+        }
     }
 }
 
 void EllipseFilled::update(float dt) {
-    // ruch w gore i dol
-    //translate(0, sin(SDL_GetTicks() * 0.002f));
+   
 }
 
 bool EllipseFilled::containsPoint(float px, float py) {
-    float dx = px - m_x;
-    float dy = py - m_y;
-    return (dx * dx) / (rx * rx) + (dy * dy) / (ry * ry) <= 1.0f;
+    float rad = rotation * M_PI / 180.0f;
+    float cosA = cos(-rad);
+    float sinA = sin(-rad);
+
+    float dx = px - cx;
+    float dy = py - cy;
+
+    float localX = dx * cosA - dy * sinA;
+    float localY = dx * sinA + dy * cosA;
+
+    return ((localX * localX) / (rx * rx) + (localY * localY) / (ry * ry)) <= 1.0f;
 }
