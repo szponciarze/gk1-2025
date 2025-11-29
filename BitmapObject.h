@@ -11,8 +11,7 @@
 #include <string>
 #include <vector>
 
-// Klasa bazowa dla obiektow rysowanych za pomoc¹ bitmap.
-// Zmieniamy dziedziczenie, aby zawieralo UpdatableObject
+
 /**
 * @class BitmapObject
 * @brief Obiekt rysowany za pomoc¹ bitmap.
