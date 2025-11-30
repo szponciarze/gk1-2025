@@ -41,63 +41,65 @@ bool PrimitiveRenderer::getPixel(int x, int y, Uint8& r, Uint8& g, Uint8& b)
 }
 
 //Rysuje linie algorytmem przyrostowym
-void PrimitiveRenderer::incrementalAlgorithm(int x1, int y1, int x2, int y2, Uint8 r, Uint8 g, Uint8 b) {
-	if (!renderer)
+void PrimitiveRenderer::incrementalAlgorithm(int x1, int y1, int x2, int y2,
+	Uint8 r, Uint8 g, Uint8 b)
+{
+	SDL_SetRenderDrawColor(renderer, r, g, b, 255);
+	
+	//dlugosc odcinka
+	int dx = x2 - x1;
+	int dy = y2 - y1;
+
+	float m;
+
+	if (dx != 0) {
+		m = (float)dy / (float)dx;
+	}
+	else { // pionowa linia
+		if (y1 <= y2)
+			for (int y = y1; y <= y2; ++y)
+				SDL_RenderDrawPoint(renderer, x1, y);
+		else
+			for (int y = y2; y <= y1; ++y)
+				SDL_RenderDrawPoint(renderer, x1, y);
 		return;
-	int x;
-	float dy, dx, m;
-
-	
-
-	dy = y2 - y1;
-	dx = x2 - x1;
-
-	//unikniecie dzielenia przez zero
-	if (dx == 0 && dy == 0) {
-		putPixel(x1, y1, r, g, b);
-		return;
 	}
 
-	if (x1 > x2) {
-		std::swap(x1, x2);
-		std::swap(y1, y2);
-		dx = x2 - x1;
-		dy = y2 - y1;
-	
-	}
+	// m<= 1 
+	if (fabs(m) <= 1.0f) {
 
-
-	m = dy / dx;
-
-
-	// m <= 1
-	if (std::fabs(m) <= 1.0f) {
-		float y = static_cast<float>(y1);
-		for (x = x1; x <= x2; ++x) {
-			putPixel(x, static_cast<int>(std::round(y)), r, g, b);
-			y += m;
-		}
-	
-	}
-	// m > 1
-	else {
-		if (y1 > y2) {
+		if (x1 > x2) { 
 			std::swap(x1, x2);
-			std::swap(y1, y2);
-			dx = x2 - x1;
-			dy = y2 - y1;
-		}
-		float invM = dx / dy;
-		float x = static_cast<float>(x1);
-
-		for (int y = y1; x <= y2; ++y) {
-			putPixel(y, static_cast<int>(std::round(x)), r, g, b);
-			x += invM;
+			std::swap(y1, y2); 
 		}
 
+		float y = (float)y1;
+		for (int x = x1; x <= x2; x++) {
+
+			SDL_RenderDrawPoint(renderer, x, (int)round(y));
+			y += m; // m = dy/dx
+		}
 	}
-	
 
+	//  m > 1 
+	else {
+
+		if (y1 > y2) { 
+			std::swap(y1, y2); 
+			std::swap(x1, x2); 
+		}
+
+		float inv_m = (float)dx / (float)dy;
+
+		float x = (float)x1;
+		for (int y = y1; y <= y2; y++) {
+
+			SDL_RenderDrawPoint(renderer, (int)round(x), y);
+
+			//1/m = dx/dy
+			x += inv_m;
+		}
+	}
 }
 // Rysuje pusty prostokat
 void PrimitiveRenderer::drawRect(int x, int y, int w, int h, Uint8 r, Uint8 g, Uint8 b) {
