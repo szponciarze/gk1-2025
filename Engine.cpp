@@ -20,9 +20,12 @@
 #include "Line.h"
 #include "Player.h" 
 #include "Bitmap.h"
+
 ShapeObject* selectedShape = nullptr;
 Player* player = new Player(200, 150, 64, 64); // Wymiary pasujace do sprite'ow
+/*
 Rectangle* rect = new Rectangle(150, 100, 200, 150, 255, 0, 0);
+Rectangle* rectB = new Rectangle(350, 300, 200, 150, 255, 0, 0);
 RectangleFilled* rectfill = new RectangleFilled(150, 100, 200, 150, 255, 255, 255);
 Circle* circle = new Circle(50, 50, 10, 255, 255, 255);
 CircleFilled* circlefill = new CircleFilled(75, 75, 50, 125, 125, 125);
@@ -30,6 +33,7 @@ Ellipse* ellipse = new Ellipse(400, 300, 80, 30, 255, 255, 0);
 EllipseFilled* ellipsefill = new EllipseFilled(600, 300, 40, 80, 0, 255, 255);
 Polyline* polyline = new Polyline({ {100,100},{200,200},{300,120},{350,180} }, 255, 128, 0);
 Line* line = new Line(100, 300, 500, 350, 255, 255, 0);
+*/
 
 // BitmapHandler jest teraz uzywany przez BitmapObject i jego pochodne
 BitmapHandler bitmapHandler;
@@ -106,9 +110,15 @@ bool Engine::init(const std::string& windowtitle, int x, int y, int width, int h
 //Glowna petla gry
 void Engine::mainLoop() {
     SDL_Event e;
+
+    
+    shapeObjects.push_back(player);
+    updatableObjects.push_back(player);
     /*
     shapeObjects.push_back(rect);
     updatableObjects.push_back(rect);
+    shapeObjects.push_back(rectB);
+    updatableObjects.push_back(rectB);
     shapeObjects.push_back(rectfill);
     updatableObjects.push_back(rectfill);
     shapeObjects.push_back(circle);
@@ -123,8 +133,7 @@ void Engine::mainLoop() {
     updatableObjects.push_back(polyline);
     shapeObjects.push_back(line);
     updatableObjects.push_back(line);
-    shapeObjects.push_back(player);
-    updatableObjects.push_back(player);
+
     */
 
     while (isRunning) {
@@ -140,81 +149,66 @@ void Engine::mainLoop() {
             if (e.type == SDL_QUIT)
                 isRunning = false;
 
-            //if (!shapeObjects.empty()) {
-            //    selectedShape = shapeObjects.back(); 
-           // }
-
             if (keyboardOn && e.type == SDL_KEYDOWN) {
                  std::cout << "Nacisnieto klawisz: " << SDL_GetKeyName(e.key.keysym.sym) << std::endl;
             }
-            //WYBOR KSZTALTU//
-            if (keyboardOn && e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_1) {
-                std::cout << "Wybrano opcje rysowania prostokatu! Nacisnij w dowolne miejsce na ekranie" << std::endl;
-                shapeChoice = 1;
+            //MENU WYBORU
+            if (keyboardOn && e.type == SDL_KEYDOWN) {
+                switch (e.key.keysym.sym) {
+                case SDLK_1: {
+                    shapeChoice = 1; updateChoice = 0; fillChoice = 0; std::cout << "Wybrano opcje rysowania prostokatu! Nacisnij w dowolne miejsce na ekranie" << std::endl; break;
+                }
+                case SDLK_2: {
+                    shapeChoice = 2; updateChoice = 0; fillChoice = 0; std::cout << "Wybrano opcje rysowania kola! Nacisnij w dowolne miejsce na ekranie" << std::endl; break;
+                }
+                case SDLK_3: {
+                    shapeChoice = 3; updateChoice = 0; fillChoice = 0; std::cout << "Wybrano opcje rysowania elipsy! Nacisnij w dowolne miejsce na ekranie" << std::endl; break;
+                }
+                case SDLK_4: {
+                    shapeChoice = 4; updateChoice = 0; fillChoice = 0; std::cout << "Wybrano opcje rysowania wypelnionego kola! Nacisnij w dowolne miejsce na ekranie"; break;
+                }
+                case SDLK_5: {
+                    shapeChoice = 5; updateChoice = 0; fillChoice = 0; std::cout << "Wybrano opcje rysowania wypelnionej elipsy! Nacisnij w dowolne miejsce na ekranie"; break;
+                }
+                case SDLK_6: {
+                    shapeChoice = 6; updateChoice = 0; fillChoice = 0; std::cout << "Wybrano opcje rysowania wypelnionego prostokata! Nacisnij w dowolne miejsce na ekranie"; break;
+                }
+                case SDLK_7: {
+                    shapeChoice = 7; updateChoice = 0; fillChoice = 0; std::cout << "Wybrano opcje rysowania linii! Nacisnij w dowolne miejsce na ekranie"; break;
+                }
+                case SDLK_8: {
+                    shapeChoice = 8; updateChoice = 0; fillChoice = 0; std::cout << "Wybrano opcje rysowania polyline! Nacisnij w dowolne miejsce na ekranie"; break;
+                }
+                case SDLK_0: {
+                    shapeChoice = 0; updateChoice = 0; fillChoice = 0; std::cout << "Tryb kursora wlaczony" << std::endl; break;
+                }
+                case SDLK_t: {
+                    shapeChoice = 0; updateChoice = 1; std::cout << "Tryb translacji" << std::endl; break;
+                }
+                case SDLK_r: {
+                    shapeChoice = 0; updateChoice = 2; std::cout << "Tryb rotacji" << std::endl; break;
+                }
+                case SDLK_y: {
+                    shapeChoice = 0; updateChoice = 3; std::cout << "Tryb skalowania" << std::endl; break;
+                }
+                case SDLK_p: {
+                    shapeChoice = 99; updateChoice = 0; fillChoice = 0; std::cout << "Tryb wyboru obiektu" << std::endl; break;
+                }
+                case SDLK_b: {
+                    fillChoice = 1; shapeChoice = 0; updateChoice = 0; std::cout << "Border fill wlaczony" << std::endl; break;
+                }
+                case SDLK_f: {
+                    fillChoice = 2; shapeChoice = 0; updateChoice = 0; std::cout << "Flood fill wlaczony" << std::endl; break;
+                }
+                case SDLK_c: {
+                    fillChoice = 0; executeBorderFill = false; executeFloodFill = false; std::cout << "Wylaczono, wyczyszczono wypelnianie!" << std::endl; break;
+                }
+                default: {
+                    break;
+                }
+                }
             }
-            if (keyboardOn && e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_2) {
-                std::cout << "Wybrano opcje rysowania kola! Nacisnij w dowolne miejsce na ekranie" << std::endl;
-                shapeChoice = 2;
-            }
-            if (keyboardOn && e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_3) {
-                std::cout << "Wybrano opcje rysowania elipsy! Nacisnij w dowolne miejsce na ekranie" << std::endl;
-                shapeChoice = 3;
-            }
-            if (keyboardOn && e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_4) {
-                std::cout << "Wybrano opcje rysowania wypelnionego kola! Nacisnij w dowolne miejsce na ekranie" << std::endl;
-                shapeChoice = 4;
-            }
-            if (keyboardOn && e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_5) {
-                std::cout << "Wybrano opcje rysowania wypelnionej elipsy! Nacisnij w dowolne miejsce na ekranie" << std::endl;
-                shapeChoice = 5;
-            }
-            if (keyboardOn && e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_6) {
-                std::cout << "Wybrano opcje rysowania wypelnionego prostokata! Nacisnij w dowolne miejsce na ekranie" << std::endl;
-                shapeChoice = 6;
-            }
-            if (keyboardOn && e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_7) {
-                std::cout << "Wybrano opcje rysowania linii! Nacisnij w dowolne miejsce na ekranie" << std::endl;
-                shapeChoice = 7;
-            }
-            if (keyboardOn && e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_8) {
-                std::cout << "Wybrano opcje rysowania polyline! Nacisnij w dowolne miejsce na ekranie" << std::endl;
-                shapeChoice = 8;
-            }
-            if (keyboardOn && e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_0) {
-                std::cout << "Tryb rysowania wylaczony!" << std::endl;
-                shapeChoice = 0;
-            }
-            //KONIEC WYBORU KSZTALTU
-            //WYBOR TRANSFORMACJI
-            if (keyboardOn && e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_t) {
-                shapeChoice = 0;
-                std::cout << "Tryb translacji!" << std::endl;
-                updateChoice = 1;
-            }
-
-            if (keyboardOn && e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_r) {
-                shapeChoice = 0;
-                std::cout << "Tryb rotacji!" << std::endl;
-                updateChoice = 2;
-            }
-
-            if (keyboardOn && e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_y) {
-                shapeChoice = 0;
-                std::cout << "Tryb skalowania!" << std::endl;
-                updateChoice = 3;
-            }
-
-            if (keyboardOn && e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_e) {
-                shapeChoice = 0;
-                std::cout << "Tryb czuwania!" << std::endl;
-                updateChoice = 0;
-            }
-
-            if (keyboardOn && e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_p) {
-                std::cout << "Tryb wyboru obiektu! Kliknij w obiekt myszą\n";
-                shapeChoice = 99; 
-            }
-            //KONIEC WYBORU TRANSFORMACJI
+            //KONIEC MENU WYBORU
             //WYBIERANIE OBIEKTU DO TRANSFORMACJI
             if (mouseOn && e.type == SDL_MOUSEBUTTONDOWN && shapeChoice==99) {
                 int mx = e.button.x;
@@ -222,7 +216,7 @@ void Engine::mainLoop() {
 
                 if (!shapeObjects.empty()) {
                     for (int i = shapeObjects.size() - 1; i >= 0; i--) {
-                        std::cout << "Obiekt " << i << ": x=" << shapeObjects[i]->getX()<< ", y=" << shapeObjects[i]->getY() << std::endl;
+                        std::cout << "Obiekt " << shapeObjects[i]->getId() << ": x=" << shapeObjects[i]->getX() << ", y=" << shapeObjects[i]->getY() << std::endl;
                         if (shapeObjects[i]->containsPoint(mx, my)) {
                             selectedShape = shapeObjects[i];
                             std::cout << "Wybrano obiekt!\n";
@@ -234,8 +228,6 @@ void Engine::mainLoop() {
             }
             //KONIEC WYBORU OBIEKTU DO TRANSFORMACJI
 
-
-            
             if (mouseOn && e.type == SDL_MOUSEBUTTONDOWN) {
                 std::cout << "Nacisnieto klawisz myszy w: (" << e.button.x << "," << e.button.y << ")" << std::endl;
                 //SWITCH DO RYSOWANIA KSZTALTOW
@@ -246,43 +238,36 @@ void Engine::mainLoop() {
                 case 1: {
                     Rectangle* rectangle2 = new Rectangle(e.button.x, e.button.y, 200, 150, 0, 0, 0);
                     shapeObjects.push_back(rectangle2);
-                    updatableObjects.push_back(rectangle2);
                     break;
                 }
                 case 2: {
                     Circle* circle2 = new Circle(e.button.x, e.button.y, 10, 0, 0, 0);
                     shapeObjects.push_back(circle2);
-                    updatableObjects.push_back(circle2);
                     break;
                 }
                 case 3: {
                     Ellipse* ellipse2 = new Ellipse(e.button.x, e.button.y, 20, 30, 0, 0, 0);
                     shapeObjects.push_back(ellipse2);
-                    updatableObjects.push_back(ellipse2);
                     break;
                 }
                 case 4: {
                     CircleFilled* circlefill2 = new CircleFilled(e.button.x, e.button.y, 50, 125, 125, 125);
                     shapeObjects.push_back(circlefill2);
-                    updatableObjects.push_back(circlefill2);
                     break;
                 }
                 case 5: {
                     EllipseFilled* ellipsefill2 = new EllipseFilled(e.button.x, e.button.y, 40, 80, 0, 255, 255);
                     shapeObjects.push_back(ellipsefill2);
-                    updatableObjects.push_back(ellipsefill2);
                     break;
                 }
                 case 6: {
                     RectangleFilled* rectanglefill2 = new RectangleFilled(e.button.x, e.button.y, 200, 150, 255, 255, 255);
                     shapeObjects.push_back(rectanglefill2);
-                    updatableObjects.push_back(rectanglefill2);
                     break;
                 }
                 case 7: {
                     Line* line2 = new Line(e.button.x, e.button.y, e.button.x + 100, e.button.y, 255, 0, 0);
                     shapeObjects.push_back(line2);
-                    updatableObjects.push_back(line2);
                     break;
                 }
                 case 8: {
@@ -293,11 +278,31 @@ void Engine::mainLoop() {
                     };
                     Polyline* polyline2 = new Polyline(pos, 0, 255, 0);                    
                     shapeObjects.push_back(polyline2);
-                    updatableObjects.push_back(polyline2);
                     break;
                 }
                 default: 
                     break;
+                //KONIEC RYSOWANIA
+                }
+                switch (fillChoice) {
+                case 0: { 
+                    break; 
+                }
+                case 1: { 
+                    b_fillX = e.button.x; 
+                    b_fillY = e.button.y; 
+                    executeBorderFill = true; 
+                    break; 
+                }
+                case 2: { 
+                    f_fillX = e.button.x; 
+                    f_fillY = e.button.y; 
+                    executeFloodFill = true; 
+                    break; 
+                }
+                default: { 
+                    break; 
+                }
                 }
                 //KONIEC
                }
@@ -328,9 +333,6 @@ void Engine::mainLoop() {
 
 
         }
-            
-    
-
         // Aktualizacja wszystkich obiektow z uwzglednieniem czasu klatki
         for (auto& obj : updatableObjects) {
             obj->update(dt);
@@ -358,18 +360,22 @@ void Engine::clearScreen(Uint8 r, Uint8 g, Uint8 b) {
 }
 
 void Engine::renderFrame() {
-    
+    PrimitiveRenderer renderer(render);
     SDL_SetRenderTarget(render, buffers[currentBuffer]);
 
     clearScreen(80, 80, 120);
-
 
     // Rysowanie wszystkich obiektow
     for (auto obj : shapeObjects) {
         obj->draw(render); // Player zostanie narysowany w tej petli
     }
-
+    if(executeBorderFill){ 
+        renderer.borderFill(buffers[currentBuffer], width, height, b_fillX, b_fillY, 0, 0, 0, 255, 255, 255);
+    }
     SDL_SetRenderTarget(render, nullptr);
+    if (executeFloodFill) {
+        renderer.floodFill(buffers[currentBuffer], width, height, f_fillX, f_fillY, 0, 0, 0);
+    }
     SDL_RenderCopy(render, buffers[currentBuffer], nullptr, nullptr);
     SDL_RenderPresent(render);
 

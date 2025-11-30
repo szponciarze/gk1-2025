@@ -86,11 +86,29 @@ private:
 	/**
 	* @brief Wybrany tryb rysowania kszta³tów.
 	*/
-	int shapeChoice=NULL;
+	int shapeChoice;
 	/**
 	* @brief Wybrany tryb transformacji.
 	*/
-	int updateChoice=NULL;
+	int updateChoice;
+	/**
+	* @brief Wybrany tryb wypelnienia.
+	*/
+	int fillChoice;
+	/**
+	* @brief Flaga okreœlaj¹ca czy nale¿y u¿yæ wype³nienia borderFill.
+	*/
+	bool executeBorderFill = false;
+	/**
+	* @brief Flaga okreœlaj¹ca czy nale¿y u¿yæ wype³nienia floodFill.
+	*/
+	bool executeFloodFill = false;
+	/**
+	* @brief Pozycje startowe dla wype³nieñ:
+	*        b_fillX, b_fillY – pocz¹tek wype³nienia border fill,
+	*        f_fillX, f_fillY – pocz¹tek wype³nienia flood fill.
+	*/
+	int b_fillX, b_fillY, f_fillX, f_fillY;
 
 public:
 	/**
