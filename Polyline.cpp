@@ -14,14 +14,21 @@ void Polyline::translate(float dx, float dy) {
 
 void Polyline::rotate(float angle) {
     float rad = angle * M_PI / 180.0f;
-    float cx = points[0].x;
+    float cx = 0, cy = 0;
+
+    for (auto& p : points) {
+        cx += p.x;
+        cy += p.y;
+    }
+    cx /= points.size();
+    cy /= points.size();
 
     for (auto& p : points) {
         float x = p.x - cx;
-        float y = p.y - cx;
+        float y = p.y - cy;
 
         p.x = cx + x * cos(rad) - y * sin(rad);
-        p.y = cx + x * sin(rad) + y * cos(rad);
+        p.y = cy + x * sin(rad) + y * cos(rad);
     }
 }
 
